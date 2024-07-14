@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Chat with ChatGPT</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+<div id="container">
+    <div id="header">Jarvis</div>
+    <div id="chat-output"></div>
+    <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Type your message here...">
+        <button type="submit"><i class="fas fa-arrow-up"></i></button>
+    </form>
+</div>
+
+<audio id="speech">
+    <source src="/speech.mp3">
+</audio>
+
+<script src="app.js"></script>
+
+</body>
+</html>
