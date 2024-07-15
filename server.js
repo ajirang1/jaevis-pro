@@ -17,7 +17,6 @@ const PORT = process.env.PORT || 3000;
 
 
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
@@ -53,27 +52,54 @@ app.post('/api/chat', async (req, res) => {
                 },
             });
 
-                    if (!res.ok) {
-                        throw new Error(`${res.status} ${res.statusText}\n${await res.text()}`);
-                    }
+            if (!res.ok) {
+                throw new Error(`${res.status} ${res.statusText}\n${await res.text()}`);
+            }
 
 
+            const responseData = await res.json();
 
-                    const responseData = await res.json();
-
-        
             const decodedAudioData = Buffer.from(responseData.audio_data, "base64");
 
-        
             return decodedAudioData;
-                }
+        }
 
-app.get('/speech.mp3', (req, res) => {
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', 0);
-    res.sendFile(path.join(__dirname, 'public', 'speech.mp3'));
+        async function main() {
+            const audio = await getAudio(assistantMessage);
+            await fs.writeFile("./public/speech.mp3", audio);
+        }
+        app.post('/api/chat', async (req, res) => {
+            const messages = req.body.messages;
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-3.5-turbo-0125',
+            messages: messages
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const assistantMessage = response.data.choices[0].message.content;
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error communicating with OpenAI API');
+    }
 });
+
+        main();
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error communicating with OpenAI API');
+    }
+});
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
