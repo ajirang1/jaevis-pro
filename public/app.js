@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            const assistantMessage = data.content;
+            const assistantMessage = data.message;
 
             const messageBubble = loadingMessage.querySelector('.message-bubble');
             messageBubble.classList.remove('loading');
@@ -34,21 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
             messageBubble.style.color = 'black';
             messageBubble.innerText = assistantMessage;
 
-            // ...
-
+            // Cache-busting mechanism for audio file
             const speech = document.getElementById('speech');
             const source = speech.querySelector('source');
-
-            conversationHistory.push({ role: 'assistant', content: assistantMessage });
-            source.src = "/speech.mp3?" + new Date().getTime();
-
+            source.src = `/speech.mp3?${new Date().getTime()}`;
             speech.load();
             speech.onloadeddata = function() {
                 speech.play();
+                console.log('played');
             };
 
-// ...
-
+            conversationHistory.push({ role: 'assistant', content: assistantMessage });
 
         } catch (error) {
             chatOutput.removeChild(loadingMessage);
@@ -72,10 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         messageContainer.appendChild(messageBubble);
         chatOutput.appendChild(messageContainer);
 
-        // Scroll to the latest message
-        chatOutput.scrollTop = chatOutput.scrollHeight;
+        chatOutput.scrollTop = chatOutput.scrollHeight; // Scroll to the bottom
 
         return messageContainer;
     }
 });
-

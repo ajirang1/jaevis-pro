@@ -35,6 +35,7 @@ body {
     width: 100%;
     background-color: darkblue;
     padding: 10px;
+    margin-bottom: 10vh;
 }
 
 #chat-input {
