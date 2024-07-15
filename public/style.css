@@ -39,7 +39,6 @@ body {
     background-size: 240% 240%;
     animation: gradient-animation 20s ease infinite;
     padding: 10px;
-    margin-bottom: 10vh;
 }
 
 #chat-input {

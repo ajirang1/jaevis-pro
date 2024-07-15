@@ -16,7 +16,8 @@
     "express": "^4.19.2",
     "node-fetch": "^2.7.0",
     "nodemon": "^3.1.4",
-    "openai": "^4.52.5"
+    "openai": "^4.52.5",
+    "tiktoken": "^1.0.15"
   },
   "description": ""
 }
