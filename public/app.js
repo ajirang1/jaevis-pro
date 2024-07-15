@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            const assistantMessage = data.message;
+            const assistantMessage = data.content;
 
             const messageBubble = loadingMessage.querySelector('.message-bubble');
             messageBubble.classList.remove('loading');
@@ -68,7 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         messageContainer.appendChild(messageBubble);
         chatOutput.appendChild(messageContainer);
 
-        chatOutput.scrollTop = chatOutput.scrollHeight; // Scroll to the bottom
+        // Scroll to the latest message
+        chatOutput.scrollTop = chatOutput.scrollHeight;
 
         return messageContainer;
     }
