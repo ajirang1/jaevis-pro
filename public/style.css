@@ -17,9 +17,7 @@ body {
 #header {
     width: 100%;
     text-align: center;
-    background: linear-gradient(140deg,#19a9cb,#1286d7,#4545fd,#e2e2ff);
-    background-size: 240% 240%;
-    animation: gradient-animation 20s ease infinite;
+    background-color: darkblue;
     padding: 20px;
     font-size: 2em;
     color: white;
@@ -35,9 +33,7 @@ body {
 #chat-form {
     display: flex;
     width: 100%;
-    background: linear-gradient(320deg,#19a9cb,#1286d7,#4545fd,#e2e2ff);
-    background-size: 240% 240%;
-    animation: gradient-animation 20s ease infinite;
+    background-color: darkblue;
     padding: 10px;
 }
 
@@ -134,15 +130,3 @@ button {
         background-position: -200% 0;
     }
 }
-
-@keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }

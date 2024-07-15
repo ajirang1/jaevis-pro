@@ -34,17 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
             messageBubble.style.color = 'black';
             messageBubble.innerText = assistantMessage;
 
-            // Cache-busting mechanism for audio file
+            // ...
+
             const speech = document.getElementById('speech');
             const source = speech.querySelector('source');
-            source.src = `/speech.mp3?${new Date().getTime()}`;
+
+            conversationHistory.push({ role: 'assistant', content: assistantMessage });
+            source.src = "/speech.mp3?" + new Date().getTime();
+
             speech.load();
             speech.onloadeddata = function() {
                 speech.play();
-                console.log('played');
             };
 
-            conversationHistory.push({ role: 'assistant', content: assistantMessage });
+// ...
+
 
         } catch (error) {
             chatOutput.removeChild(loadingMessage);
