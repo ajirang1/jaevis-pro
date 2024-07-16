@@ -139,29 +139,29 @@ async function checkingStatus(res, threadId, runId, resolve) {
 
 
 
-// Function to generate speech audio
-async function getAudio(text) {
-    const res = await fetch(`${API_BASE_URL}/v1/audio/speech`, {
-        method: "POST",
-        body: JSON.stringify({
-            input: `<speak>${text}</speak>`,
-            voice_id: VOICE_ID,
-            audio_format: "mp3",
-        }),
-        headers: {
-            Authorization: `Bearer ${SPEECHIFY_API_KEY}`,
-            "content-type": "application/json",
-        },
-    });
-
-    if (!res.ok) {
-        throw new Error(`${res.status} ${res.statusText}\n${await res.text()}`);
-    }
-
-    const responseData = await res.json();
-    const decodedAudioData = Buffer.from(responseData.audio_data, "base64");
-    return decodedAudioData;
-}
+// // Function to generate speech audio
+// async function getAudio(text) {
+//     const res = await fetch(`${API_BASE_URL}/v1/audio/speech`, {
+//         method: "POST",
+//         body: JSON.stringify({
+//             input: `<speak>${text}</speak>`,
+//             voice_id: VOICE_ID,
+//             audio_format: "mp3",
+//         }),
+//         headers: {
+//             Authorization: `Bearer ${SPEECHIFY_API_KEY}`,
+//             "content-type": "application/json",
+//         },
+//     });
+//
+//     if (!res.ok) {
+//         throw new Error(`${res.status} ${res.statusText}\n${await res.text()}`);
+//     }
+//
+//     const responseData = await res.json();
+//     const decodedAudioData = Buffer.from(responseData.audio_data, "base64");
+//     return decodedAudioData;
+// }
 
 async function getVectorStore() {
     const vectorStore = await openai.beta.vectorStores.retrieve(
@@ -254,10 +254,10 @@ app.post('/message', (req, res) => {
                     checkingStatus(res, threadId, runId, resolve);
                 }, 5000);
             }).then(async (assistantMessage) => {
-                const speechMessageJson = assistantMessage[0].text.value;
-                const speechMessage = JSON.stringify(speechMessageJson);
-                const audio = await getAudio(speechMessage);
-                await fs.writeFile("./public/speech.mp3", audio);
+                // const speechMessageJson = assistantMessage[0].text.value;
+                // const speechMessage = JSON.stringify(speechMessageJson);
+                // const audio = await getAudio(speechMessage);
+                // await fs.writeFile("./public/speech.mp3", audio);
                 res.json({message: assistantMessage});
             });
         });
