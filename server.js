@@ -9,6 +9,7 @@ const {response} = require("express");
 const { OPENAI_API_KEY, ASSISTANT_ID, SERPAPI_KEY, NEISAPI_KEY, TIMEZONEDB_KEY } = process.env;
 
 const { getJson } = require("serpapi");
+const {get} = require("axios");
 
 // const SPEECHIFY_API_KEY = "gYY2u8JgpciACjCGiazY2TjAwTBKi8yoKvK8-pciQQs=";
 // const API_BASE_URL = "https://api.sws.speechify.com";
@@ -96,16 +97,38 @@ async function getMealInfo(pIndex) {
     }
 }
 
-
-// Example usage:
-(async () => {
+async function getTimeTable(GRADE, CLASS_NM) {
     try {
-        const mealInfo = await getMealInfo('7530969');
-        console.log('Meal Info:', mealInfo);
+        const date = await getCurrentTime();
+        console.log('Date:', date);
+        const url = `https://open.neis.go.kr/hub/hisTimetable?KEY=${NEISAPI_KEY}&Type=json&pIndex=1&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530969&ALL_TI_YMD=${date}&GRADE=${GRADE}&CLASS_NM=${CLASS_NM}`;
+        const response = await axios.get(url);
+        const timetable = response.data;
+
+        console.log('API Response:', JSON.stringify(timetable, null, 2));
+
+        // Ensure the timetable contains the expected structure
+        if (timetable && Array.isArray(timetable.hisTimetable) && timetable.hisTimetable.length > 1 && Array.isArray(timetable.hisTimetable[1].row)) {
+            const rowArray = timetable.hisTimetable[1].row;
+            const timeTableData = rowArray.map(item => item.ITRT_CNTNT);
+            return timeTableData;
+        } else {
+            throw new TypeError('API response does not contain the expected timetable structure');
+        }
     } catch (error) {
-        console.error('Error while fetching meal info:', error);
+        console.error('Error in getTimeTable:', error);
+        throw error; // Re-throw the error after logging it
     }
-})();
+}
+// // Example usage:
+// (async () => {
+//     try {
+//         const mealInfo = await getMealInfo('7530969');
+//         console.log('Meal Info:', mealInfo);
+//     } catch (error) {
+//         console.error('Error while fetching meal info:', error);
+//     }
+// })();
 
 
 
@@ -196,10 +219,17 @@ async function checkingStatus(res, threadId, runId, resolve) {
                         } else if (parsedArgs.pIndex) {
                             console.log('pIndex for meal info: ' + parsedArgs.pIndex);
                             const apiMealInfo = await getMealInfo(parsedArgs.pIndex);
-
                             toolOutputs.push({
                                 tool_call_id: tool_calls[0].id,
                                 output: JSON.stringify(apiMealInfo),
+                            });
+
+                        } else if (parsedArgs.GRADE && parsedArgs.CLASS_NM) {
+                            console.log('Grade and class name for timetable: ' + parsedArgs.GRADE + ' ' + parsedArgs.CLASS_NM);
+                            const apiTimeTable = await getTimeTable(parsedArgs.GRADE, parsedArgs.CLASS_NM);
+                            toolOutputs.push({
+                                tool_call_id: tool_calls[0].id,
+                                output: JSON.stringify(apiTimeTable),
                             });
                         } else {
                             console.error('Error: neither query nor pIndex is present in parsed arguments');
@@ -380,5 +410,10 @@ app.post('/search', (req, res) => {
 
 app.get('/mealinfo', (req, res) => {
     getMealInfo().then(r =>
+        res.json(r));
+});
+
+app.get ('/timetable', (req, res) => {
+    getTimeTable(req.body.GRADE, req.body.CLASS_NM).then(r =>
         res.json(r));
 });
