@@ -1,3 +1,6 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
 body {
     margin: 0;
     font-family: 'Pretendard Variable', sans-serif;
@@ -19,7 +22,7 @@ body {
     text-align: center;
     background: linear-gradient(140deg,#19a9cb,#1286d7,#4545fd,#e2e2ff);
     background-size: 240% 240%;
-    animation: gradient-animation 20s ease infinite;
+    animation: gradient-animation 15s ease infinite;
     padding: 20px;
     font-size: 2em;
     color: white;
@@ -37,7 +40,7 @@ body {
     width: 100%;
     background: linear-gradient(320deg,#19a9cb,#1286d7,#4545fd,#e2e2ff);
     background-size: 240% 240%;
-    animation: gradient-animation 20s ease infinite;
+    animation: gradient-animation 15s ease infinite;
     padding: 10px;
 }
 
@@ -52,6 +55,8 @@ body {
     color: black;
     margin-left: 10px;
     font-family: 'Pretendard Variable', sans-serif !important;
+    transition: border-color 0.3s ease-in-out;
+
 }
 
 button {
@@ -126,6 +131,13 @@ button {
     transition: background 1s ease-in-out, color 1s ease-in-out;
 }
 
+#file-upload-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
 @keyframes loading-animation {
     0% {
         background-position: 200% 0;
@@ -146,3 +158,19 @@ button {
         background-position: 0% 50%;
     }
 }
+
+@keyframes borderRed {
+    0% {
+    }
+    10%, 90% {
+        border: 2px solid red;
+    }
+    100% {
+    }
+}
+
+/* Class to trigger the animation */
+.border-red-animation {
+    animation: borderRed 2s forwards;
+}
+
